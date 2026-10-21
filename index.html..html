@@ -1,0 +1,651 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>buildwithbritton</title>
+<style>
+  :root {
+    --bg: #0f1115;
+    --panel: #171a21;
+    --panel-2: #1e222b;
+    --border: #2a2f3a;
+    --text: #e8ebf2;
+    --muted: #9aa3b2;
+    --accent: #5b8cff;
+    --accent-2: #7ee0c3;
+    --danger: #ff7a7a;
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  .wrap { max-width: 1060px; margin: 0 auto; padding: 0 20px; }
+
+  /* Nav */
+  nav {
+    position: sticky; top: 0; z-index: 10;
+    background: rgba(15,17,21,.85); backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+  nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+  .logo { font-weight: 700; letter-spacing: .3px; }
+  .logo span { color: var(--accent); }
+  nav ul { display: flex; gap: 22px; list-style: none; margin: 0; padding: 0; }
+  nav a { color: var(--muted); font-size: 15px; }
+  nav a:hover { color: var(--text); }
+  .btn {
+    display: inline-block; border: 0; cursor: pointer;
+    background: var(--accent); color: #fff; font-weight: 600; font-size: 15px;
+    padding: 12px 20px; border-radius: 10px; transition: transform .15s, opacity .15s;
+  }
+  .btn:hover { transform: translateY(-1px); opacity: .92; }
+  .btn.ghost { background: transparent; border: 1px solid var(--border); color: var(--text); }
+
+  /* Hero */
+  .hero { padding: 90px 0 60px; text-align: left; }
+  .eyebrow {
+    display: inline-block; font-size: 13px; letter-spacing: 1px; text-transform: uppercase;
+    color: var(--accent-2); border: 1px solid var(--border); padding: 6px 12px; border-radius: 999px;
+    margin-bottom: 20px;
+  }
+  h1 { font-size: clamp(36px, 6vw, 60px); line-height: 1.08; margin: 0 0 18px; letter-spacing: -1px; }
+  h1 em { font-style: normal; color: var(--accent); }
+  .lead { font-size: 19px; color: var(--muted); max-width: 640px; margin: 0 0 30px; }
+  .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+  section { padding: 70px 0; border-top: 1px solid var(--border); }
+  h2 { font-size: 32px; margin: 0 0 10px; letter-spacing: -.5px; }
+  .sub { color: var(--muted); margin: 0 0 36px; max-width: 640px; }
+
+  /* Cards */
+  .grid { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+  .card {
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 24px;
+  }
+  .card h3 { margin: 0 0 8px; font-size: 18px; }
+  .card p { margin: 0; color: var(--muted); font-size: 15px; }
+  .icon {
+    width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center;
+    background: var(--panel-2); margin-bottom: 14px; font-size: 20px;
+  }
+
+  /* Steps */
+  .steps { counter-reset: step; }
+  .step { display: flex; gap: 18px; padding: 18px 0; border-bottom: 1px dashed var(--border); }
+  .step:last-child { border-bottom: 0; }
+  .num {
+    flex: 0 0 40px; height: 40px; border-radius: 50%;
+    background: var(--panel-2); border: 1px solid var(--border);
+    display: grid; place-items: center; font-weight: 700; color: var(--accent-2);
+  }
+  .step h4 { margin: 2px 0 4px; font-size: 17px; }
+  .step p { margin: 0; color: var(--muted); font-size: 15px; }
+
+  /* Story */
+  .story p { color: var(--muted); font-size: 17px; max-width: 760px; margin: 0 0 18px; }
+
+  /* Form */
+  form.request {
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 32px;
+  }
+  fieldset { border: 0; margin: 0 0 26px; padding: 0; }
+  legend { font-weight: 700; font-size: 17px; margin-bottom: 14px; padding: 0; color: var(--accent-2); }
+  .row { display: grid; gap: 16px; grid-template-columns: 1fr 1fr; }
+  @media (max-width: 680px) { .row { grid-template-columns: 1fr; } nav ul { display: none; } }
+  label { display: block; font-size: 14px; color: var(--muted); margin-bottom: 6px; }
+  label .req { color: var(--danger); }
+  input, select, textarea {
+    width: 100%; font: inherit; color: var(--text);
+    background: var(--panel-2); border: 1px solid var(--border);
+    border-radius: 10px; padding: 11px 13px; outline: none;
+  }
+  input:focus, select:focus, textarea:focus { border-color: var(--accent); }
+  textarea { min-height: 110px; resize: vertical; }
+  .field { margin-bottom: 16px; }
+  .checks { display: flex; flex-wrap: wrap; gap: 10px; }
+  .checks label {
+    display: inline-flex; align-items: center; gap: 8px; margin: 0;
+    background: var(--panel-2); border: 1px solid var(--border);
+    padding: 9px 13px; border-radius: 999px; cursor: pointer; color: var(--text); font-size: 14px;
+  }
+  .checks input { width: auto; accent-color: var(--accent); }
+  .radios { display: flex; flex-wrap: wrap; gap: 10px; }
+  .radios label { margin: 0; }
+  .colors { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .colors input[type=color] { width: 56px; height: 44px; padding: 3px; cursor: pointer; }
+  .actions { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-top: 8px; }
+  .hint { font-size: 13px; color: var(--muted); margin-top: 6px; }
+  .error { color: var(--danger); font-size: 14px; margin-top: 12px; min-height: 20px; }
+  .ok { color: var(--accent-2); font-size: 14px; margin-top: 12px; min-height: 20px; }
+
+  /* Pricing */
+  .price { font-size: 30px; font-weight: 700; margin: 8px 0 14px; }
+  .price small { font-size: 14px; color: var(--muted); font-weight: 400; }
+  .card ul { padding-left: 18px; margin: 14px 0 0; color: var(--muted); font-size: 15px; }
+  .card.featured { border-color: var(--accent); }
+
+  footer { border-top: 1px solid var(--border); padding: 30px 0; color: var(--muted); font-size: 14px; }
+  footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="logo">buildwith<span>britton</span></div>
+    <ul>
+      <li><a href="#story">My story</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#process">Process</a></li>
+      <li><a href="#request">Request a site</a></li>
+    </ul>
+    <a class="btn" href="#request">Start a request</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="eyebrow">Custom websites, built to your brief</span>
+    <h1>Tell me what you need.<br /><em>I'll build your website.</em></h1>
+    <p class="lead">
+      Share your goals, your style, and your must-have features. Submit a request, and I'll review it,
+      follow up with questions, and build a site designed around how your business actually works.
+    </p>
+    <div class="hero-actions">
+      <a class="btn" href="#request">Submit a request</a>
+      <a class="btn ghost" href="#process">See how it works</a>
+    </div>
+  </div>
+</header>
+
+<section id="story">
+  <div class="wrap">
+    <h2>My story</h2>
+    <p class="sub">Why I started, and why my prices are where they are.</p>
+    <div class="story">
+      <p>Hi, I'm Britton. I'm a homeschooled teen who has loved technology for as long as I can remember. For a while, I mostly used it for video games. Then my mom challenged me to use what I was learning to help people and maybe start a real business someday.</p>
+      <p>So I started learning to code. Before long I was updating websites for family members whose sites looked like they were built twenty years ago. Seeing their faces when their business finally looked modern and easy to use is what made me want to do this for more small business owners.</p>
+      <p>You may notice my prices are lower than other web designers'. That's not because my work isn't good. It's because I'm still building my business, and my mom, who runs her own business, Fort Worth Lactation, says I need to earn a track record before I charge what established designers charge. She compares it to my sisters. When they started babysitting, they earned $8 an hour, while some friends were charging $15 or $20. Mom told them to work hard and become excellent babysitters first. She remembers babysitting five kids while also doing the laundry, dishes, and cleaning, all for $3 an hour, back in the "olden" days. She says a fair price comes after proving your value.</p>
+      <p>So here's my promise: I'll build you a site you're proud to show your customers, I'll listen to what your business needs, and I'll keep improving it until it fits you. Your success is what turns this into a real business for me.</p>
+    </div>
+  </div>
+</section>
+
+<section id="services">
+  <div class="wrap">
+    <h2>What I build</h2>
+    <p class="sub">Simple, professional websites for small businesses that need an online presence. Every project starts with your design and your needs.</p>
+    <div class="grid">
+      <div class="card"><div class="icon">🌱</div><h3>Your first website</h3><p>For businesses that don't have a website yet. Get found online, look professional, and give customers a way to reach you.</p></div>
+      <div class="card"><div class="icon">🏢</div><h3>Business websites</h3><p>Multi-page sites with services, about, photos, and contact info that work well on phones.</p></div>
+      <div class="card"><div class="icon">🧭</div><h3>Landing pages</h3><p>A focused page to promote one service, offer, or event, with a clear call to action.</p></div>
+      <div class="card"><div class="icon">🛠️</div><h3>Website refresh</h3><p>Update an old, outdated site so it looks modern, loads faster, and works on mobile.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="wrap">
+    <h2>Pricing</h2>
+    <p class="sub">Starting estimates. Every project gets a firm quote after I review your request. Payment can be sent via Zelle, Venmo, Cash App, or PayPal (to my mom).</p>
+    <div class="grid">
+      <div class="card">
+        <h3>The Standard</h3>
+        <div class="price">$100</div>
+        <p>A single polished page with your content, contact form, and mobile layout.</p>
+        <ul><li>1 page</li><li>Contact form</li><li>Basic SEO setup</li><li>2 revisions after initial review</li></ul>
+      </div>
+      <div class="card featured">
+        <h3>The Premium</h3>
+        <div class="price">$250</div>
+        <p>A multi-page site designed around your brand and goals.</p>
+        <ul><li>Up to 5 pages</li><li>Custom design direction</li><li>4 revisions after initial review</li></ul>
+      </div>
+      <div class="card">
+        <h3>Custom</h3>
+        <div class="price">Quoted</div>
+        <p>Bigger projects or extra pages beyond the standard scope.</p>
+        <ul><li>Scoped to your needs</li><li>Larger multi-page sites</li></ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="domain">
+  <div class="wrap">
+    <h2>Domain & hosting</h2>
+    <p class="sub">Your website needs two things to be online: a domain name (like yourbusiness.com) and hosting. Your website price does not include them.</p>
+    <div class="grid">
+      <div class="card">
+        <h3>Get your own</h3>
+        <p>You can buy a domain and hosting yourself, and the accounts stay in your name.</p>
+        <p style="margin-top:14px"><a href="#setup">See the domain setup guide &rarr;</a></p>
+      </div>
+      <div class="card">
+        <h3>Why you should own it</h3>
+        <p>Your domain and hosting accounts should be in your name. That way you control your website, can change providers anytime, and keep your site online even if you stop working with me. Payment for both is made directly to the companies, never to me.</p>
+      </div>
+      <div class="card">
+        <h3>Handover</h3>
+        <p>When your site is finished, I'll hand it over with the hosting and domain set up in your name, plus a short walkthrough so you know how to use it.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="setup">
+  <div class="wrap">
+    <h2>Domain setup guide</h2>
+    <p class="sub">Follow these steps once you've decided to move forward. Each step takes just a few minutes.</p>
+    <div class="story">
+      <p><strong>Step 1. Pick and buy your domain.</strong> Go to <strong>GoDaddy</strong> or <strong>IONOS</strong>, search for the name you want (like yourbusiness.com), and buy it in your own account. You'll pay the company directly.</p>
+      <p><strong>Step 2. Create a free Cloudflare account.</strong> Sign up at cloudflare.com using your business email. This is where your website will be hosted, and it stays in your name.</p>
+      <p><strong>Step 3. Invite me to your Cloudflare account.</strong> In Cloudflare, go to Manage Account, then Members, and invite <strong>buildwithbritton@gmail.com</strong> with administrator access. You can remove me at any time.</p>
+      <p><strong>Step 4. Send me your domain name.</strong> Email me the domain you bought and I'll reply with the exact settings to add at GoDaddy or IONOS. You'll paste them in yourself, so you never share your registrar login with me.</p>
+      <p><strong>Step 5. We launch.</strong> Once the settings are added, I connect your site to your domain, check it on phones and computers, and hand it over.</p>
+    </div>
+  </div>
+</section>
+
+<section id="delivered">
+  <div class="wrap">
+    <h2>What you get delivered</h2>
+    <p class="sub">A finished website is not the same as a live website. Here's exactly what you receive, and what has to be set up before it's online.</p>
+    <div class="grid">
+      <div class="card">
+        <h3>What you receive</h3>
+        <ul>
+          <li>A finished website with your text, photos, and logo</li>
+          <li>A design checked on phones and computers</li>
+          <li>A contact form, once it's connected to a form service</li>
+          <li>A short walkthrough of how to make basic updates</li>
+          <li>Your site files, so you own your website</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>What has to be set up</h3>
+        <ul>
+          <li>A domain name, which you buy (about $10 to $20 a year for a .com)</li>
+          <li>A free hosting account to keep the site online</li>
+          <li>A free form service account so the contact form sends messages to you</li>
+          <li>Connecting your domain to your hosting (you can do this yourself, or I can do it for an additional fee)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>What you provide</h3>
+        <ul>
+          <li>Your business information, services, and prices</li>
+          <li>Photos and your logo, if you have them</li>
+          <li>Your preferred contact details</li>
+          <li>Feedback during revisions</li>
+        </ul>
+      </div>
+    </div>
+    <p class="sub" style="margin-top:28px"><strong>Important:</strong> your site isn't live until the domain and hosting are connected, and the contact form won't send messages until the form service is connected. You can do those steps yourself or hire me to do them for an additional fee. Either way, the accounts must stay active and in your name for the site to keep working.</p>
+  </div>
+</section>
+
+<section id="together">
+  <div class="wrap">
+    <h2>How this all works</h2>
+    <p class="sub">Here's what happens from your request to a live website.</p>
+    <div class="story">
+      <p><strong>1. You send a request.</strong> Fill out the form with as much about your business as you can. The more I know, the better your first draft will be.</p>
+      <p><strong>2. I review it and draft your site.</strong> I build a first version based on your request before we talk, so you can see what it could look like.</p>
+      <p><strong>3. We meet.</strong> We go over the draft on a Google Meet, and I ask questions and make notes on changes.</p>
+      <p><strong>4. You get a firm quote.</strong> Once you agree, you pay the quote through Zelle, Venmo, Cash App, or PayPal.</p>
+      <p><strong>5. We revise.</strong> Your package includes the revision rounds listed in your quote, and we refine the site until it fits your business.</p>
+      <p><strong>6. You get your domain and hosting.</strong> You buy a domain name and sign up for free hosting, so your site has its own address and stays online. Both accounts stay in your name. I can help with setup for an additional fee.</p>
+      <p><strong>7. We connect a contact form.</strong> Your contact form is connected to a form service so customer messages reach you. The form service account stays in your name too.</p>
+      <p><strong>8. We launch.</strong> I publish your site, check it on phones and computers, and walk you through how to use it.</p>
+    </div>
+
+    <h3 class="why-title">Why my prices are lower than agencies</h3>
+    <div class="story">
+      <p>Some agencies quote $2,000 or more for a basic website. Those prices usually cover larger teams, project managers, long contracts, ongoing support packages, and custom code for big feature lists. Those things are valuable for some businesses, but many small businesses only need a clear, professional website that's easy to find and easy to contact them through.</p>
+      <p>My prices are lower because the scope is smaller and focused on small businesses. I'm building my track record, so I keep the process simple and the quote clear. If you need something bigger later, we can talk about a custom quote.</p>
+    </div>
+  </div>
+</section>
+
+<section id="process">
+  <div class="wrap">
+    <h2>How it works</h2>
+    <p class="sub">A simple path from request to launch.</p>
+    <div class="steps">
+      <div class="step"><div class="num">1</div><div><h4>Submit your request</h4><p>Fill out the form below with your goals, design ideas, and features.</p></div></div>
+      <div class="step"><div class="num">2</div><div><h4>Review & quote</h4><p>I review your request and reply within 2 business days with questions and a quote.</p></div></div>
+      <div class="step"><div class="num">3</div><div><h4>Design & build</h4><p>You get a design direction to approve before the full build begins.</p></div></div>
+      <div class="step"><div class="num">4</div><div><h4>Review & launch</h4><p>We review revisions together, then I publish your site and hand over the keys.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="request">
+  <div class="wrap">
+    <h2>Request a website</h2>
+    <p class="sub">The more detail you give, the more accurate the quote. Only the required fields are mandatory.</p>
+
+    <form class="request" id="requestForm" novalidate>
+
+      <fieldset>
+        <legend>1. About you</legend>
+        <div class="row">
+          <div class="field">
+            <label for="name">Your name <span class="req">*</span></label>
+            <input id="name" name="name" autocomplete="name" placeholder="Jane Smith" />
+          </div>
+          <div class="field">
+            <label for="email">Email <span class="req">*</span></label>
+            <input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" />
+          </div>
+        </div>
+        <div class="row">
+          <div class="field">
+            <label for="phone">Phone (optional)</label>
+            <input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="(555) 123-4567" />
+          </div>
+          <div class="field">
+            <label for="business">Business or project name</label>
+            <input id="business" name="business" placeholder="Acme Landscaping" />
+          </div>
+        </div>
+        <div class="row">
+          <div class="field">
+            <label for="gbp">Google Business Profile link</label>
+            <input id="gbp" name="gbp" placeholder="Paste the link to your Google listing" />
+          </div>
+          <div class="field">
+            <label for="website">Current website (if you have one)</label>
+            <input id="website" name="website" placeholder="https://" />
+          </div>
+        </div>
+        <div class="row">
+          <div class="field">
+            <label for="social">Social media links</label>
+            <input id="social" name="social" placeholder="Facebook, Instagram, TikTok, etc." />
+          </div>
+          <div class="field">
+            <label for="area">Service area / location</label>
+            <input id="area" name="area" placeholder="City or region you serve" />
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>2. The project</legend>
+        <div class="field">
+          <label for="type">What kind of site do you need? <span class="req">*</span></label>
+          <select id="type" name="type">
+            <option value="">Choose one...</option>
+            <option>Landing page</option>
+            <option>Business website</option>
+            <option>Redesign of existing site</option>
+            <option>Something else</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="goals">What should the site accomplish? <span class="req">*</span></label>
+          <textarea id="goals" name="goals" placeholder="e.g. Get more booked appointments, sell my products online, share event info with members..."></textarea>
+        </div>
+        <div class="field">
+          <label for="audience">Who is the site for?</label>
+          <input id="audience" name="audience" placeholder="e.g. local homeowners, students, members of my church group" />
+        </div>
+        <div class="field">
+          <label>Features you need</label>
+          <div class="checks" id="features">
+            <label><input type="checkbox" name="features" value="Contact form" /> Contact form</label>
+            <label><input type="checkbox" name="features" value="Photo gallery" /> Photo gallery</label>
+            <label><input type="checkbox" name="features" value="Event calendar" /> Event calendar</label>
+            <label><input type="checkbox" name="features" value="Blog / news" /> Blog / news</label>
+            <label><input type="checkbox" name="features" value="Newsletter signup" /> Newsletter signup</label>
+            <label><input type="checkbox" name="features" value="Social media links" /> Social media links</label>
+            <label><input type="checkbox" name="features" value="Google Maps" /> Google Maps</label>
+          </div>
+        </div>
+        <div class="field">
+          <label for="pages">Pages you want (optional)</label>
+          <input id="pages" name="pages" placeholder="Home, About, Services, Gallery, Contact" />
+        </div>
+        <div class="field">
+          <label for="wordDump">Tell me everything about your business</label>
+          <textarea id="wordDump" name="wordDump" style="min-height:200px" placeholder="Write as much as you can: what you do, how long you've been open, who your favorite customers are, what makes you different, prices, hours, promotions, staff, your story, anything you want customers to know. More detail helps a lot."></textarea>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>3. Design</legend>
+        <div class="field">
+          <label>Design style</label>
+          <div class="radios" id="style">
+            <label><input type="radio" name="style" value="Clean & minimal" /> Clean & minimal</label>
+            <label><input type="radio" name="style" value="Bold & modern" /> Bold & modern</label>
+            <label><input type="radio" name="style" value="Warm & friendly" /> Warm & friendly</label>
+            <label><input type="radio" name="style" value="Professional & corporate" /> Professional & corporate</label>
+            <label><input type="radio" name="style" value="Playful & creative" /> Playful & creative</label>
+            <label><input type="radio" name="style" value="Not sure, surprise me" /> Not sure, surprise me</label>
+          </div>
+        </div>
+        <div class="field">
+          <label>Brand colors (optional)</label>
+          <div class="colors">
+            <input type="color" id="color1" value="#5b8cff" aria-label="Primary color" />
+            <input type="color" id="color2" value="#7ee0c3" aria-label="Secondary color" />
+            <span class="hint">Pick your main and accent colors, or leave the defaults.</span>
+          </div>
+        </div>
+        <div class="field">
+          <label for="brandWords">Words that describe your brand</label>
+          <input id="brandWords" name="brandWords" placeholder="e.g. friendly, trustworthy, fast, premium, fun" />
+        </div>
+        <div class="field">
+          <label for="competitors">Competitors or businesses you admire</label>
+          <input id="competitors" name="competitors" placeholder="Other local businesses or sites, and what you like about them" />
+        </div>
+        <div class="field">
+          <label for="inspo">Sites you like the look of</label>
+          <textarea id="inspo" name="inspo" placeholder="Paste links to websites whose design, layout, or feel you like, and say what you like about each one."></textarea>
+        </div>
+        <div class="field">
+          <label for="assets">Logo, photos, or content</label>
+          <select id="assets" name="assets">
+            <option>I have a logo and photos ready</option>
+            <option>I have a logo, but need photos</option>
+            <option>I have nothing yet, I need help with content</option>
+          </select>
+          <div class="hint">I'll ask for the actual files after I review your request.</div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>4. Timeline & budget</legend>
+        <div class="row">
+          <div class="field">
+            <label for="timeline">When do you need it?</label>
+            <select id="timeline" name="timeline">
+              <option>No rush</option>
+              <option>Within 2 to 4 weeks</option>
+              <option>Within 1 month</option>
+              <option>ASAP</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="budget">Budget range</label>
+            <select id="budget" name="budget">
+              <option>Not sure yet</option>
+              <option>Under $250</option>
+              <option>$250 to $500</option>
+              <option>$500 to $1,500</option>
+              <option>$1,500 and up</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="notes">Anything else I should know?</label>
+          <textarea id="notes" name="notes" placeholder="Existing domain name, hosting, things you don't like, deadlines, etc."></textarea>
+        </div>
+      </fieldset>
+
+      <div class="actions">
+        <button class="btn" type="submit">Send my request</button>
+        <button class="btn ghost" type="button" id="copyBtn">Copy summary</button>
+        <button class="btn ghost" type="reset" id="resetBtn">Clear form</button>
+      </div>
+      <div class="error" id="error"></div>
+      <div class="ok" id="ok"></div>
+    </form>
+  </div>
+</section>
+
+<section id="terms">
+  <div class="wrap">
+    <h2>Terms</h2>
+    <p class="sub">Plain-language terms for every project. Please read these before you submit a request or pay.</p>
+    <div class="story">
+      <p><strong>1. Quotes and scope.</strong> Starting prices are estimates. I will send a firm quote after reviewing your request. The quote describes the pages, features, and revisions included.</p>
+      <p><strong>2. Payment.</strong> Payment can be sent via Zelle, Venmo, Cash App, or PayPal, to my mom. Work begins after the quote is accepted and payment is received.</p>
+      <p><strong>3. Revisions.</strong> The Standard includes 2 revisions after initial review. The Premium includes 4 revisions after initial review. Custom projects get a custom quote that lists the revisions included. Changes beyond those are handled through an update package.</p>
+      <p><strong>4. Sales are final.</strong> Once a website has been delivered and paid for, all sales are final and no refunds are given.</p>
+      <p><strong>5. Updates.</strong> I do not currently offer ongoing monthly upkeep. Updates are available through a separate update package, priced based on what you need.</p>
+      <p><strong>6. Your content.</strong> You are responsible for making sure you have the rights to any logos, photos, text, or other content you give me.</p>
+      <p><strong>7. Domains and hosting.</strong> Domain names and hosting are not included in website prices. They are paid for separately, and they must stay active for your site to stay online. I can help you set them up for an additional fee, quoted separately. Domain and hosting accounts should be in your name.</p>
+      <p><strong>8. Handover.</strong> When your site is finished and paid for, I'll hand it over with the accounts set up in your name, along with the files and a short walkthrough.</p>
+      <p><strong>9. Results.</strong> I build websites to the best of my ability, but I cannot guarantee specific results such as more customers or sales.</p>
+      <p><strong>10. Questions.</strong> If you have questions about these terms, contact me before you pay.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>© <span id="year"></span> buildwithbritton. All requests are reviewed personally.</span>
+    <span><a href="#terms">Terms</a> · Questions? <a href="#request">Start a request</a></span>
+  </div>
+</footer>
+
+<script>
+  // ==== SETTINGS: change this to your own email address ====
+  const OWNER_EMAIL = "buildwithbritton@gmail.com";
+
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  const form = document.getElementById("requestForm");
+  const errorEl = document.getElementById("error");
+  const okEl = document.getElementById("ok");
+
+  function getVal(id) { return document.getElementById(id)?.value.trim() || ""; }
+  function getChecked(name) {
+    return [...form.querySelectorAll(`input[name="${name}"]:checked`)].map(i => i.value);
+  }
+  function getRadio(name) {
+    const r = form.querySelector(`input[name="${name}"]:checked`);
+    return r ? r.value : "";
+  }
+
+  function buildSummary() {
+    const features = getChecked("features");
+    const lines = [
+      "WEBSITE REQUEST",
+      "=================",
+      "",
+      "ABOUT",
+      `Name: ${getVal("name")}`,
+      `Email: ${getVal("email")}`,
+      `Phone: ${getVal("phone") || "-"}`,
+      `Business/Project: ${getVal("business") || "-"}`,
+      `Google Business Profile: ${getVal("gbp") || "-"}`,
+      `Current website: ${getVal("website") || "-"}`,
+      `Social media: ${getVal("social") || "-"}`,
+      `Service area: ${getVal("area") || "-"}`,
+      "",
+      "PROJECT",
+      `Type: ${getVal("type")}`,
+      `Goals: ${getVal("goals")}`,
+      `Audience: ${getVal("audience") || "-"}`,
+      `Features: ${features.length ? features.join(", ") : "-"}`,
+      `Pages: ${getVal("pages") || "-"}`,
+      "",
+      "BUSINESS DESCRIPTION (WORD DUMP)",
+      getVal("wordDump") || "-",
+      "",
+      "DESIGN",
+      `Style: ${getRadio("style") || "-"}`,
+      `Brand words: ${getVal("brandWords") || "-"}`,
+      `Colors: ${document.getElementById("color1").value} / ${document.getElementById("color2").value}`,
+      `Competitors/admired: ${getVal("competitors") || "-"}`,
+      `Inspiration: ${getVal("inspo") || "-"}`,
+      `Assets: ${getVal("assets")}`,
+      "",
+      "TIMELINE & BUDGET",
+      `Timeline: ${getVal("timeline")}`,
+      `Budget: ${getVal("budget")}`,
+      `Notes: ${getVal("notes") || "-"}`
+    ];
+    return lines.join("\n");
+  }
+
+  function validate() {
+    const name = getVal("name");
+    const email = getVal("email");
+    const type = getVal("type");
+    const goals = getVal("goals");
+    if (!name) return "Please enter your name.";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return "Please enter a valid email address.";
+    if (!type) return "Please choose the kind of site you need.";
+    if (!goals) return "Please tell me what the site should accomplish.";
+    return "";
+  }
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    okEl.textContent = "";
+    const problem = validate();
+    if (problem) {
+      errorEl.textContent = problem;
+      return;
+    }
+    errorEl.textContent = "";
+
+    const subject = `Website request: ${getVal("type")} for ${getVal("name")}`;
+    const body = buildSummary();
+    const mailto = `mailto:${OWNER_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+    window.location.href = mailto;
+    okEl.textContent = "Your email app should open with your request filled in. Just hit send. If nothing opens, use the Copy summary button and email it to me.";
+  });
+
+  document.getElementById("copyBtn").addEventListener("click", async () => {
+    const problem = validate();
+    if (problem) { errorEl.textContent = problem; return; }
+    errorEl.textContent = "";
+    try {
+      await navigator.clipboard.writeText(buildSummary());
+      okEl.textContent = "Summary copied to your clipboard.";
+    } catch {
+      errorEl.textContent = "Could not copy automatically. Select the form details and copy them manually.";
+    }
+  });
+
+  document.getElementById("resetBtn").addEventListener("click", () => {
+    setTimeout(() => {
+      errorEl.textContent = "";
+      okEl.textContent = "";
+      document.getElementById("color1").value = "#5b8cff";
+      document.getElementById("color2").value = "#7ee0c3";
+    }, 0);
+  });
+</script>
+</body>
+</html>
